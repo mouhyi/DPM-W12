@@ -1,3 +1,5 @@
+import lejos.nxt.*;
+
 /*
  * Odometer.java
  */
@@ -5,6 +7,13 @@
 public class Odometer extends Thread {
 	// robot position
 	private double x, y, theta;
+	
+	// Other private variables
+	private double rightTachoCount, leftTachoCount;
+	final private double wheelRadius = 2.85;
+	final private double width = 16.1;
+	private double rightArcLength, leftArcLength;
+	private double deltaTheta, deltaRobotArcLength;
 
 	// odometer update period, in ms
 	private static final long ODOMETER_PERIOD = 25;
@@ -26,11 +35,28 @@ public class Odometer extends Thread {
 
 		while (true) {
 			updateStart = System.currentTimeMillis();
-			// put (some of) your odometer code here
+			
+			// First, we get the current tacho count for each motor (in radians)
+			rightTachoCount = convertToRadians(Motor.B.getTachoCount());
+			leftTachoCount = convertToRadians(Motor.A.getTachoCount());
+			//Once this is done, we reset them so we can get the right tacho count at the next step
+			Motor.A.resetTachoCount();
+			Motor.B.resetTachoCount();
+			
+			// We use a method detailed below to calculate the arc length traveled by each wheel
+			rightArcLength = calculateArcLength(rightTachoCount, wheelRadius);
+			leftArcLength = calculateArcLength(leftTachoCount, wheelRadius);
 
+			// We calculate both our change in angle and our change in arc length
+			deltaTheta = (rightArcLength-leftArcLength) / width;
+			deltaRobotArcLength = (rightArcLength-leftArcLength) / 2;
+			
 			synchronized (lock) {
-				// don't use the variables x, y, or theta anywhere but here!
-				theta = -0.7376;
+				// We set the x, y and theta variables based on our mathematical model
+				x += deltaRobotArcLength * Math.cos(theta + (deltaTheta/2));
+				y += deltaRobotArcLength * Math.sin(theta + (deltaTheta/2));
+				theta += deltaTheta;
+
 			}
 
 			// this ensures that the odometer only runs once every period
@@ -119,5 +145,13 @@ public class Odometer extends Thread {
 		synchronized (lock) {
 			this.theta = theta;
 		}
+	}
+	
+	private double calculateArcLength(double tachoCount, double wheelRadius){
+		return (tachoCount * wheelRadius);
+	}
+	
+	private double convertToRadians(int tachoCount){
+		return (tachoCount * 2 * Math.PI)/(360.0);
 	}
 }
