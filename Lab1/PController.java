@@ -95,7 +95,7 @@ public class PController implements UltrasonicController {
 	*/
 	private int adjustSpeed(int error){
 		int newSpeed = Math.max(  Lab1.getMotorlow() ,  motorStraight - (int)(turnCoefficient*error));
-		newSpeed = Math.min(val,  Lab1.getMotorhigh());
+		newSpeed = Math.min(newSpeed,  Lab1.getMotorhigh());
 		return newSpeed;
 	}
 
