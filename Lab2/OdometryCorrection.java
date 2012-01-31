@@ -27,11 +27,15 @@ public class OdometryCorrection extends Thread {
 			correctionStart = System.currentTimeMillis();
 			
 			// First we read the light sensor for a value below our threshold, telling us that we're crossing a line
+			LCD.drawInt(lightSensor.readValue(), 0, 4);
 			if (lightSensor.readValue() < LIGHT_THRESHOLD){
 				if (headingUpDown(odometer.getTheta())){
 					odometer.setY(getGridLine(odometer.getX()));
+					LCD.drawString("Correction in y", 0, 5);
+				
 				}else{
 					odometer.setX(getGridLine(odometer.getY()));
+					LCD.drawString("Correction in x", 0, 5);
 				}
 			}
 			

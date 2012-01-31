@@ -38,6 +38,7 @@ public class Lab2 {
 			// start only the odometer and the odometry display
 			odometer.start();
 			odometryDisplay.start();
+			odometryCorrection.start();
 
 		} else {
 			// start the odometer, the odometry display and (possibly) the
