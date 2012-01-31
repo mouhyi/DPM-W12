@@ -19,6 +19,8 @@ public class OdometryCorrection extends Thread {
 			correctionStart = System.currentTimeMillis();
 
 			// put your correction code here
+			
+			
 
 			// this ensure the odometry correction occurs only once every period
 			correctionEnd = System.currentTimeMillis();
@@ -33,4 +35,13 @@ public class OdometryCorrection extends Thread {
 			}
 		}
 	}
+	
+	/**
+	*This method computes the coordinate(depending on the heading of the robot)
+	* of the closest grid line that the robot has crossed  
+	*/
+	public static double getGridLine(double coordinate){
+		return  Math.round(((coordinate-OFFSET-15)/30)) * 30 + 15 + offset;
+	}
+	
 }
