@@ -10,6 +10,8 @@ public class Odometer extends Thread {
 	
 	// Other private variables
 	private double rightTachoCount, leftTachoCount;
+	private int previousRightTacho = Motor.B.getTachoCount(); 
+	private int previousLeftTacho = Motor.A.getTachoCount();
 	final private double wheelRadius = 2.85;
 	final private double width = 16.1;
 	private double rightArcLength, leftArcLength;
@@ -31,31 +33,33 @@ public class Odometer extends Thread {
 
 	// run method (required for Thread)
 	public void run() {
+		
 		long updateStart, updateEnd;
-
+				
 		while (true) {
 			updateStart = System.currentTimeMillis();
 			
 			// First, we get the current tacho count for each motor (in radians)
-			rightTachoCount = convertToRadians(Motor.B.getTachoCount());
-			leftTachoCount = convertToRadians(Motor.A.getTachoCount());
-			//Once this is done, we reset them so we can get the right tacho count at the next step
-			Motor.A.resetTachoCount();
-			Motor.B.resetTachoCount();
+			rightTachoCount = convertToRadians(Motor.B.getTachoCount() - previousRightTacho);
+			leftTachoCount = convertToRadians(Motor.A.getTachoCount() - previousLeftTacho);
+			
+			//Once this is done, we set the current tacho as the previous tacho, which we'll use at the next step
+			previousRightTacho = Motor.B.getTachoCount();
+			previousLeftTacho = Motor.A.getTachoCount();
 			
 			// We use a method detailed below to calculate the arc length traveled by each wheel
 			rightArcLength = calculateArcLength(rightTachoCount, wheelRadius);
 			leftArcLength = calculateArcLength(leftTachoCount, wheelRadius);
-
+			
 			// We calculate both our change in angle and our change in arc length
 			deltaTheta = (rightArcLength-leftArcLength) / width;
-			deltaRobotArcLength = (rightArcLength-leftArcLength) / 2;
+			deltaRobotArcLength = (rightArcLength+leftArcLength) / 2;
 			
 			synchronized (lock) {
 				// We set the x, y and theta variables based on our mathematical model
-				x += deltaRobotArcLength * Math.cos(theta + (deltaTheta/2));
-				y += deltaRobotArcLength * Math.sin(theta + (deltaTheta/2));
-				theta += deltaTheta;
+				this.x += deltaRobotArcLength * Math.cos(theta + (deltaTheta/2));
+				this.y += deltaRobotArcLength * Math.sin(theta + (deltaTheta/2));
+				this.theta += deltaTheta;
 
 			}
 
