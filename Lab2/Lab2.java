@@ -28,8 +28,7 @@ public class Lab2 {
 				&& buttonChoice != Button.ID_RIGHT);
 
 		if (buttonChoice == Button.ID_LEFT) {
-			for (NXTRegulatedMotor motor : new NXTRegulatedMotor[] { Motor.A,
-					Motor.B, Motor.C }) {
+			for (NXTRegulatedMotor motor : new NXTRegulatedMotor[] { Motor.A, Motor.B, Motor.C }) {
 				motor.forward();
 				motor.flt();
 			}
