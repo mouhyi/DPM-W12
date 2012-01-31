@@ -9,8 +9,9 @@ public class Lab2 {
 
 		// some objects that need to be instantiated
 		Odometer odometer = new Odometer();
+		LightSensor lightSensor = new LightSensor(SensorPort.S1);
 		OdometryDisplay odometryDisplay = new OdometryDisplay(odometer);
-		OdometryCorrection odometryCorrection = new OdometryCorrection(odometer);
+		OdometryCorrection odometryCorrection = new OdometryCorrection(odometer, lightSensor);
 
 		do {
 			// clear the display
@@ -28,7 +29,8 @@ public class Lab2 {
 				&& buttonChoice != Button.ID_RIGHT);
 
 		if (buttonChoice == Button.ID_LEFT) {
-			for (NXTRegulatedMotor motor : new NXTRegulatedMotor[] { Motor.A, Motor.B, Motor.C }) {
+			for (NXTRegulatedMotor motor : new NXTRegulatedMotor[] { Motor.A,
+					Motor.B, Motor.C }) {
 				motor.forward();
 				motor.flt();
 			}
@@ -36,12 +38,13 @@ public class Lab2 {
 			// start only the odometer and the odometry display
 			odometer.start();
 			odometryDisplay.start();
+
 		} else {
 			// start the odometer, the odometry display and (possibly) the
 			// odometry correction
 			odometer.start();
 			odometryDisplay.start();
-			// odometryCorrection.start();
+			odometryCorrection.start();
 
 			// spawn a new Thread to avoid SquareDriver.drive() from blocking
 			(new Thread() {
