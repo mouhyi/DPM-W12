@@ -1,5 +1,5 @@
 /*
- * OdometryDisplay.java
+ * OdometryDisplay.java 
  */
 import lejos.nxt.LCD;
 

@@ -1,7 +1,7 @@
 import lejos.nxt.*;
 
 /*
- * Odometer.java
+ * Odometer.java 
  */
 
 public class Odometer extends Thread {
