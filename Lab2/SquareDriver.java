@@ -6,13 +6,16 @@ import lejos.nxt.*;
 public class SquareDriver {
 	private static final int FORWARD_SPEED = 250;
 	private static final int ROTATE_SPEED = 150;
-	
-	public static boolean isTurning = false; 
 
-	public static void drive(NXTRegulatedMotor leftMotor, NXTRegulatedMotor rightMotor,
-			double leftRadius, double rightRadius, double width) {
+	// We added the isTurning boolean to know when to perform corrections and when not to
+	public static boolean isTurning = false;
+
+	public static void drive(NXTRegulatedMotor leftMotor,
+			NXTRegulatedMotor rightMotor, double leftRadius,
+			double rightRadius, double width) {
 		// reset the motors
-		for (NXTRegulatedMotor motor : new NXTRegulatedMotor[] { leftMotor, rightMotor }) {
+		for (NXTRegulatedMotor motor : new NXTRegulatedMotor[] { leftMotor,
+				rightMotor }) {
 			motor.stop();
 			motor.setAcceleration(1000);
 		}
@@ -26,8 +29,8 @@ public class SquareDriver {
 		}
 
 		for (int i = 0; i < 4; i++) {
-			
-			isTurning = false; 			////
+
+			isTurning = false; // //
 			// drive forward two tiles
 			leftMotor.setSpeed(FORWARD_SPEED);
 			rightMotor.setSpeed(FORWARD_SPEED);
@@ -40,6 +43,9 @@ public class SquareDriver {
 			leftMotor.setSpeed(ROTATE_SPEED);
 			rightMotor.setSpeed(ROTATE_SPEED);
 
+			// We made the robot go around the square counter-clockwise, such
+			// that we were in a proper cartesian plane with an angle relative
+			// to the x-axis
 			leftMotor.rotate(-convertAngle(leftRadius, width, 90.0), true);
 			rightMotor.rotate(convertAngle(rightRadius, width, 90.0), false);
 		}

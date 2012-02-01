@@ -11,7 +11,8 @@ public class Lab2 {
 		Odometer odometer = new Odometer();
 		LightSensor lightSensor = new LightSensor(SensorPort.S1);
 		OdometryDisplay odometryDisplay = new OdometryDisplay(odometer);
-		OdometryCorrection odometryCorrection = new OdometryCorrection(odometer, lightSensor);
+		OdometryCorrection odometryCorrection = new OdometryCorrection(
+				odometer, lightSensor);
 
 		do {
 			// clear the display
