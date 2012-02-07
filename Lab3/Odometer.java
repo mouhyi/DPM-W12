@@ -1,90 +1,59 @@
-import lejos.nxt.*;
+import lejos.util.Timer;
+import lejos.util.TimerListener;
 
-/*
- * Odometer.java 
- */
-
-public class Odometer extends Thread {
-	// robot position
-	private double x, y, theta;
-
-	// Other private variables
-	private double rightTachoCount, leftTachoCount;
-	private int previousRightTacho = Motor.B.getTachoCount();
-	private int previousLeftTacho = Motor.A.getTachoCount();
-	final private double wheelRadius = 2.85;
-	final private double width = 16.1;
-	private double rightArcLength, leftArcLength;
-	private double deltaTheta, deltaRobotArcLength;
+public class Odometer implements TimerListener {
 
 	// odometer update period, in ms
 	private static final long ODOMETER_PERIOD = 25;
-
-	// lock object for mutual exclusion
+	private Robot robot;
+   	private Timer odometerTimer;
+   	// Position Variables
+    private double x, y, theta, displacement;  // Theta in degrees
+	private double dTheta, dDisplacement;
+   	// lock object for mutual exclusion
 	private Object lock;
-
-	// default constructor
-	public Odometer() {
-		x = 0.0;
-		y = 0.0;
-		theta = 0.0;
-		lock = new Object();
-	}
-
-	// run method (required for Thread)
-	public void run() {
-
-		long updateStart, updateEnd;
-
-		while (true) {
-			updateStart = System.currentTimeMillis();
-
-			// First, we get the current tacho count for each motor (in radians)
-			rightTachoCount = convertToRadians(Motor.B.getTachoCount()
-					- previousRightTacho);
-			leftTachoCount = convertToRadians(Motor.A.getTachoCount()
-					- previousLeftTacho);
-
-			// Once this is done, we set the current tacho as the previous
-			// tacho, which we'll use at the next step
-			previousRightTacho = Motor.B.getTachoCount();
-			previousLeftTacho = Motor.A.getTachoCount();
-
-			// We use a method detailed below to calculate the arc length
-			// traveled by each wheel
-			rightArcLength = calculateArcLength(rightTachoCount, wheelRadius);
-			leftArcLength = calculateArcLength(leftTachoCount, wheelRadius);
-
-			// We calculate both our change in angle and our change in arc
-			// length
-			deltaTheta = (rightArcLength - leftArcLength) / width;
-			deltaRobotArcLength = (rightArcLength + leftArcLength) / 2;
-
-			synchronized (lock) {
-				// We set the x, y and theta variables based on our mathematical
-				// model
-				this.x += deltaRobotArcLength
-						* Math.cos(theta + (deltaTheta / 2));
-				this.y += deltaRobotArcLength
-						* Math.sin(theta + (deltaTheta / 2));
-				this.theta += deltaTheta;
-
-			}
-
-			// this ensures that the odometer only runs once every period
-			updateEnd = System.currentTimeMillis();
-			if (updateEnd - updateStart < ODOMETER_PERIOD) {
-				try {
-					Thread.sleep(ODOMETER_PERIOD - (updateEnd - updateStart));
-				} catch (InterruptedException e) {
-					// there is nothing to be done here because it is not
-					// expected that the odometer will be interrupted by
-					// another thread
-				}
-			}
+	
+	/*
+	* Constructor
+	*/
+	public Odometer(Robot robot) {
+      this.robot = robot;
+      x = 0.0;
+      y = 0.0;
+      theta = 0.0;
+      lock = new Object();
+   	}
+   
+    public void timedOut() {
+    
+		dTheta = robot.getHeading() - theta;
+		dDisplacement = robot.getDisplacement() - displacement;
+		
+		// Update x, y and theta values based on our mathematical model
+		synchronized (lock) {
+			this.x += dDisplacement * Math.cos ( convertToRadians(theta + deltaTheta / 2) );
+			this.y += dDisplacement * Math.sin ( convertToRadians(theta + deltaTheta / 2) );
+			this.theta += dTheta;
+			// Map theta to [0,360)
+         	this.theta = adjustAngle(theta);
 		}
+		
+		displacement += dDisplacement;		
+		
+    }
+    
+    // This method converts angles is degrees to angles in radians
+	public static double convertToRadians(int angle) {
+		return (angle * Math.PI) / (180.0);
 	}
-
+	
+	// Map theta to [0,360)
+	public static double adjustAngle(double angle) {  
+      if (angle < 0.0)
+         angle = 360.0 + (angle % 360.0);  
+      return angle % 360.0;
+   }
+	
 	// accessors
 	public void getPosition(double[] position, boolean[] update) {
 		// ensure that the values don't change while the odometer is running
@@ -99,45 +68,34 @@ public class Odometer extends Thread {
 	}
 
 	public double getX() {
-		double result;
-
 		synchronized (lock) {
-			result = x;
+			return x;
 		}
-
-		return result;
 	}
 
 	public double getY() {
-		double result;
-
-		synchronized (lock) {
-			result = y;
-		}
-
-		return result;
-	}
+      synchronized (lock) {
+         return y;
+      }
+   }
 
 	public double getTheta() {
-		double result;
-
-		synchronized (lock) {
-			result = theta;
-		}
-
-		return result;
-	}
+      synchronized (lock) {
+         return theta;
+      }
+   }
+   
+    public Robot getRobot() {
+      return robot;
+   }
 
 	// mutators
 	public void setPosition(double[] position, boolean[] update) {
 		// ensure that the values don't change while the odometer is running
 		synchronized (lock) {
-			if (update[0])
-				x = position[0];
-			if (update[1])
-				y = position[1];
-			if (update[2])
-				theta = position[2];
+			if (update[0]) x = position[0];
+			if (update[1]) y = position[1];
+			if (update[2]) theta = position[2];
 		}
 	}
 
@@ -158,14 +116,4 @@ public class Odometer extends Thread {
 			this.theta = theta;
 		}
 	}
-
-	// This method calculates an arc length based on the tacho count and the wheel radius
-	private double calculateArcLength(double tachoCount, double wheelRadius) {
-		return (tachoCount * wheelRadius);
-	}
-
-	// This method converts angles is degrees to angles in radians
-	private double convertToRadians(int tachoCount) {
-		return (tachoCount * 2 * Math.PI) / (360.0);
-	}
-}
+}	

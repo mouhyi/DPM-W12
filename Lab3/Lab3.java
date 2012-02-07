@@ -1,13 +1,15 @@
 import lejos.nxt.*;
+import lejos.util.Timer;
+import lejos.util.TimerListener;
 
 public class Lab3 {
 	public static void main(String[] args) {
 		int buttonChoice;
 
 		// Initialize any objects necessary
-		Odometer odometer = new Odometer();
+		Odometer odometer = new Odometer( new Robot(Motor.A, Motor.B) );
 		OdometryDisplay odometryDisplay = new OdometryDisplay(odometer);
-		Navigator navigator;
+		Navigator navigator = new Navigator(odometer);
 
 		do {
 			// clear the display
@@ -27,9 +29,11 @@ public class Lab3 {
 		// Path one
 		if (buttonChoice == Button.ID_LEFT) {
 			// Start the odometer, display, and navigator
+			Timer odometerTimer = new Timer(Odometer.ODOMETER_PERIOD, odometer );
 			odometer.start();
 			odometryDisplay.start();
-			navigator = new Navigator(odometer);
+			Timer NavigatorTimer = new Timer(Navigator.NAVIGATOR_PERIOD, navigator);		
+			navigator.start();
 			
 		} else
 		// Path two
