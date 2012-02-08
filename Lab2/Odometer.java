@@ -63,10 +63,8 @@ public class Odometer extends Thread {
 			synchronized (lock) {
 				// We set the x, y and theta variables based on our mathematical
 				// model
-				this.x += deltaRobotArcLength
-						* Math.cos(theta + (deltaTheta / 2));
-				this.y += deltaRobotArcLength
-						* Math.sin(theta + (deltaTheta / 2));
+				this.x += deltaRobotArcLength * Math.cos(theta + (deltaTheta / 2));
+				this.y += deltaRobotArcLength * Math.sin(theta + (deltaTheta / 2));
 				this.theta += deltaTheta;
 
 			}

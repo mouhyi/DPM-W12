@@ -26,9 +26,10 @@ public class Robot {
 	
 	/**
 	* return the robot's heading relative to its original orientation in degrees.
+	* 	bug fixed: Feb8, 12am : right - left
 	*/
    public double getHeading() {
-	  return (leftMotor.getTachoCount() * LEFT_RADIUS - rightMotor.getTachoCount() * RIGHT_RADIUS) / WIDTH;
+	  return (-leftMotor.getTachoCount() * LEFT_RADIUS + rightMotor.getTachoCount() * RIGHT_RADIUS) / WIDTH;
    }
    
    /**
@@ -38,8 +39,9 @@ public class Robot {
 	  double leftSpeed, rightSpeed;
 	  
 	  this.forwardSpeed = forwardSpeed;
-	  this.rotationSpeed = rotationSpeed; 
+	  this.rotationSpeed = rotationSpeed;
 	  
+	  leftSpeed = (forwardSpeed + rotationalSpeed * NAV_WIDTH * Math.PI / 360.0) * 180.0 / (NAV_LEFT_RADIUS * Math.PI);
 	  // convert forwardspeed -> deg/sec and use the formulas on Navigation Tutorial
 	  leftSpeed  = (Odometer.convertToRadians(forwardSpeed) + rotationSpeed * WIDTH/2 ) / (LEFT_RADIUS);
 	  rightSpeed = (Odometer.convertToRadians(forwardSpeed) - rotationSpeed * WIDTH/2) / (RIGHT_RADIUS);

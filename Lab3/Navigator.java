@@ -1,8 +1,12 @@
 import java.util.ArrayList;
+
 import lejos.geom.Point;
 import lejos.util.Timer;
 import lejos.util.TimerListener;
-
+import java.util.ArrayList;
+import lejos.geom.Point;
+import lejos.util.Timer;
+import lejos.util.TimerListener;
 public class Navigator implements TimerListener {
 
 	private static final long NAVIGATOR_PERIOD = 100;
