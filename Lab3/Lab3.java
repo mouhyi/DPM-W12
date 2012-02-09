@@ -7,9 +7,6 @@ public class Lab3 {
 		int buttonChoice;
 
 		// Initialize any objects necessary
-		Odometer odometer = new Odometer( new Robot(Motor.A, Motor.B) );
-		OdometryDisplay odometryDisplay = new OdometryDisplay(odometer);
-		Navigator navigator = new Navigator(odometer);
 
 		do {
 			// clear the display
@@ -29,16 +26,18 @@ public class Lab3 {
 		// Path one
 		if (buttonChoice == Button.ID_LEFT) {
 			// Start the odometer, display, and navigator
-			Timer odometerTimer = new Timer(Odometer.ODOMETER_PERIOD, odometer );
-			odometer.start();
+			Odometer odometer = new Odometer(new Robot(Motor.A, Motor.B));
+			OdometryDisplay odometryDisplay = new OdometryDisplay(odometer);
 			odometryDisplay.start();
-			Timer NavigatorTimer = new Timer(Navigator.NAVIGATOR_PERIOD, navigator);		
-			navigator.start();
-			
+			Navigator navigator = new Navigator(odometer);
 		} else
 		// Path two
 		{
-			
+			Odometer odometer = new Odometer(new Robot(Motor.A, Motor.B));
+			OdometryDisplay odometryDisplay = new OdometryDisplay(odometer);
+			odometryDisplay.start();
+			NavigatorWithObstacle navigator = new NavigatorWithObstacle(odometer);
+			UltrasonicPoller us = new UltrasonicPoller();
 		}
 
 		while (Button.waitForPress() != Button.ID_ESCAPE)

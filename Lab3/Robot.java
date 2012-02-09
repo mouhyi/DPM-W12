@@ -1,23 +1,26 @@
-import lejos.nxt.Motor;
+import lejos.nxt.*;
 
 public class Robot {
-    public static final double LEFT_RADIUS = 2.85;
-    public static final double RIGHT_RADIUS = 2.85;
-    public static final double WIDTH = 16.1;
-    private Motor leftMotor, rightMotor;
-    private double forwardSpeed, rotationSpeed;
-    
+	public static final double LEFT_RADIUS = 2.85;
+	public static final double RIGHT_RADIUS = 2.85;
+	public static final double WIDTH = 16.1;
+	public NXTRegulatedMotor leftMotor, rightMotor;
+	private double forwardSpeed, rotationSpeed;
+
 	/**
-	* Constructor
-	* @param lMotor The left motor of the robot.
-	* @param rMotor The right motor of the robot.
-	*/
-    public Robot(Motor leftMotor, Motor rightMotor) {
-            this.leftMotor = leftMotor;
-            this.rightMotor = rightMotor;
-    }
-    
-    /**
+	 * Constructor
+	 * 
+	 * @param lMotor
+	 *            The left motor of the robot.
+	 * @param rMotor
+	 *            The right motor of the robot.
+	 */
+	public Robot(NXTRegulatedMotor leftMotor, NXTRegulatedMotor rightMotor) {
+		this.leftMotor = leftMotor;
+		this.rightMotor = rightMotor;
+	}
+
+	/**
 	* computes the total displacement of the robot relative to its original position in cm.
 	*/
     public double getDisplacement() {
@@ -26,10 +29,10 @@ public class Robot {
 	
 	/**
 	* return the robot's heading relative to its original orientation in degrees.
-	* 	bug fixed: Feb8, 12am : right - left
 	*/
    public double getHeading() {
 	  return (-leftMotor.getTachoCount() * LEFT_RADIUS + rightMotor.getTachoCount() * RIGHT_RADIUS) / WIDTH;
+	  ////// sign fixed
    }
    
    /**
@@ -41,11 +44,10 @@ public class Robot {
 	  this.forwardSpeed = forwardSpeed;
 	  this.rotationSpeed = rotationSpeed;
 	  
-	  leftSpeed = (forwardSpeed + rotationalSpeed * NAV_WIDTH * Math.PI / 360.0) * 180.0 / (NAV_LEFT_RADIUS * Math.PI);
+	  leftSpeed = (forwardSpeed - rotationSpeed * WIDTH * Math.PI / 360.0) * 180.0 / (LEFT_RADIUS * Math.PI);
+	  rightSpeed = (forwardSpeed + rotationSpeed * WIDTH * Math.PI / 360.0) * 180.0 / (RIGHT_RADIUS * Math.PI);
 	  // convert forwardspeed -> deg/sec and use the formulas on Navigation Tutorial
-	  leftSpeed  = (Odometer.convertToRadians(forwardSpeed) + rotationSpeed * WIDTH/2 ) / (LEFT_RADIUS);
-	  rightSpeed = (Odometer.convertToRadians(forwardSpeed) - rotationSpeed * WIDTH/2) / (RIGHT_RADIUS);
-	  
+
 	  // set motor directions
 	  if (leftSpeed > 0) {
 	     leftMotor.forward();
@@ -74,6 +76,11 @@ public class Robot {
 	     rightMotor.setSpeed((int)rightSpeed);
 	  }
 	  
+   }
+   
+   public void stop(){
+	   leftMotor.setSpeed(0);
+	   rightMotor.setSpeed(0);
    }
 	   
 }	   
