@@ -1,3 +1,8 @@
+/*
+ * Mouhyi Eddine EL Bouhali 260363897
+ * Anthony Delage 260476213
+ *  Group 28
+ */
 import lejos.nxt.*;
 import lejos.util.Timer;
 import lejos.util.TimerListener;
