@@ -1,8 +1,8 @@
 import lejos.nxt.*;
 
 public class Robot {
-	public static final double LEFT_RADIUS = 2.85;
-	public static final double RIGHT_RADIUS = 2.85;
+	public static final double LEFT_RADIUS = 2.81;
+	public static final double RIGHT_RADIUS = 2.81;		///// 2.85
 	public static final double WIDTH = 16.1;
 	public NXTRegulatedMotor leftMotor, rightMotor;
 	private double forwardSpeed, rotationSpeed;

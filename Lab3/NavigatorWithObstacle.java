@@ -33,7 +33,7 @@ public class NavigatorWithObstacle implements TimerListener {
 		
 		travelTo(60,0);
 		while(UltrasonicPoller.obstacle){
-			travelTo(odometer.getX()+35,odometer.getY()+20 );
+			travelTo(80,70 );				//// hard coded path, not very fancy but works!
 		}	
 		
 		if( Math.abs( odometer.getX() - 60) <3  &&   Math.abs(odometer.getY()) < 3  )    timer.stop();
