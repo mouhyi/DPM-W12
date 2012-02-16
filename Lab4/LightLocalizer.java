@@ -5,7 +5,7 @@ public class LightLocalizer {
 	private Robot robot;
 	private LightSensor ls;
 	
-	public static double STRAIGHT_SPEED = 3, ROTATION_SPEED = 30;
+	public static double STRAIGHT_SPEED = 50, ROTATION_SPEED = 30;
     public static double LS_RADIUS = 11.4;
     public static double LS_THRESHOLD = 45;				////  7
     public static double TURN_ANGLE = 90;
@@ -26,12 +26,12 @@ public class LightLocalizer {
 		// when done travel to (0,0) and turn to 0 degrees
 		
 	
-		int oldReading = ls.getNormalizedLightValue();
+		int oldReading = ls.getLightValue();
 		            
 		//go forward until we see a line
 		robot.advance(STRAIGHT_SPEED);
-		while((oldReading - ls.getNormalizedLightValue()) < LS_THRESHOLD)
-		        oldReading = ls.getNormalizedLightValue();
+		while((oldReading - ls.getLightValue()) < LS_THRESHOLD)
+		        oldReading = ls.getLightValue();
 		
 		//then bring our center back to the line
 		robot.advance(-STRAIGHT_SPEED);
@@ -40,9 +40,9 @@ public class LightLocalizer {
 		//rotate until we see the other line
 		robot.rotate(ROTATION_SPEED);
 		try {Thread.sleep((int)(70*1000/ROTATION_SPEED));} catch(Exception e){}
-		oldReading = ls.getNormalizedLightValue();
-		while((oldReading - ls.getNormalizedLightValue()) < LS_THRESHOLD)
-		        oldReading = ls.getNormalizedLightValue();
+		oldReading = ls.getLightValue();
+		while((oldReading - ls.getLightValue()) < LS_THRESHOLD)
+		        oldReading = ls.getLightValue();
 		
 		//then go back by 90 degrees
 		robot.rotate(-ROTATION_SPEED);
@@ -59,9 +59,9 @@ public class LightLocalizer {
 		//go forward until we see a line again
 		
 		robot.advance(STRAIGHT_SPEED);
-		oldReading = ls.getNormalizedLightValue();
-		while((oldReading - ls.getNormalizedLightValue()) < LS_THRESHOLD)
-		        oldReading = ls.getNormalizedLightValue();
+		oldReading = ls.getLightValue();
+		while((oldReading - ls.getLightValue()) < LS_THRESHOLD)
+		        oldReading = ls.getLightValue();
 		
 
 		//then bring our center back to the line
@@ -70,9 +70,9 @@ public class LightLocalizer {
 		
 		//again rotate by 90 degrees until we see a line
 		robot.rotate(-ROTATION_SPEED);
-		oldReading = ls.getNormalizedLightValue();
-		while((oldReading - ls.getNormalizedLightValue()) < LS_THRESHOLD)
-		        oldReading = ls.getNormalizedLightValue();
+		oldReading = ls.getLightValue();
+		while((oldReading - ls.getLightValue()) < LS_THRESHOLD)
+		        oldReading = ls.getLightValue();
 
 		//then go back forward by 3 cm
 		robot.advance(STRAIGHT_SPEED);
