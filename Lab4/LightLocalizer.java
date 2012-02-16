@@ -6,7 +6,7 @@ public class LightLocalizer {
 	private Robot robot;
 	private LightSensor ls;
 
-	public static double STRAIGHT_SPEED = 10, ROTATION_SPEED = 30;
+	public static double STRAIGHT_SPEED = 5, ROTATION_SPEED = 30;
 	public static double LS_RADIUS = 11.4;
 	public static double LS_THRESHOLD = 7; // // 7
 	public static double TURN_ANGLE = 90;
@@ -29,8 +29,8 @@ public class LightLocalizer {
 		int oldReading = ls.getLightValue();
 
 		// go forward until we see a line
-		robot.setSpeeds(STRAIGHT_SPEED, 0.0);
-		while (ls.getLightValue() > 45)
+		robot.advance(STRAIGHT_SPEED);
+		while (ls.getNormalizedLightValue() > 500)
 			;
 		// while((oldReading - ls.getLightValue()) < LS_THRESHOLD)
 		// oldReading = ls.getLightValue();
@@ -49,7 +49,7 @@ public class LightLocalizer {
 		} catch (Exception e) {
 		}
 		oldReading = ls.getLightValue();
-		while (ls.getLightValue() > 45)
+		while (ls.getNormalizedLightValue() > 500)
 			;
 		// while ((oldReading - ls.getLightValue()) < LS_THRESHOLD)
 		// oldReading = ls.getLightValue();
@@ -79,7 +79,7 @@ public class LightLocalizer {
 
 		robot.advance(STRAIGHT_SPEED);
 		oldReading = ls.getLightValue();
-		while (ls.getLightValue() > 45)
+		while (ls.getNormalizedLightValue() > 500)
 			;
 		// while ((oldReading - ls.getLightValue()) < LS_THRESHOLD)
 		// oldReading = ls.getLightValue();
@@ -94,7 +94,7 @@ public class LightLocalizer {
 		// again rotate by 90 degrees until we see a line
 		robot.rotate(-ROTATION_SPEED);
 		oldReading = ls.getLightValue();
-		while (ls.getLightValue() > 45)
+		while (ls.getNormalizedLightValue() > 500)
 			;
 		// while ((oldReading - ls.getLightValue()) < LS_THRESHOLD)
 		// oldReading = ls.getLightValue();

@@ -51,8 +51,12 @@ public class Lab4 {
 					USLocalizer.LocalizationType.FALLING_EDGE);
 			LightLocalizer lsl = new LightLocalizer(odo, ls);
 
-//			usl.doLocalization();
-//			patBot.setSpeeds(2.0, 0.0);
+			usl.doLocalization();
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+			}
+			patBot.setSpeeds(0.5, 0.0);
 			lsl.doLocalization();
 
 		}
