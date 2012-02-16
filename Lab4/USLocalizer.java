@@ -7,6 +7,7 @@ public class USLocalizer {
 	};
 
 	public static double ROTATION_SPEED = 30;
+	public static double STRAIGHT_SPEED = 10;
 
 	private Odometer odo;
 	private Robot robot;
@@ -109,6 +110,7 @@ public class USLocalizer {
 			// update the odometer position
 			odo.setPosition(new double[] { 0.0, 0.0, 0.0 }, new boolean[] {
 					true, true, true });
+
 		}
 	}
 

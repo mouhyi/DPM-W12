@@ -10,7 +10,7 @@ import lejos.nxt.LCD;
 import lejos.nxt.NXTRegulatedMotor;
 
 public class Navigation {
-	final static int FAST = 200, SLOW = 50, ACCELERATION = 4000;
+	final static int FAST = 200, SLOW = 60, ACCELERATION = 4000;
 	final static double DEG_ERR = 2.0, CM_ERR = 1.0;
 	private Odometer odometer;
 	private NXTRegulatedMotor leftMotor, rightMotor;

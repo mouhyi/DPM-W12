@@ -7,8 +7,8 @@ public class Lab4 {
 
 		// setup the odometer, display, and ultrasonic and light sensors
 		Robot patBot = new Robot(Motor.A, Motor.B);
-		UltrasonicSensor us = new UltrasonicSensor(SensorPort.S2);
-		LightSensor ls = new LightSensor(SensorPort.S1);
+		UltrasonicSensor us = new UltrasonicSensor(SensorPort.S1);
+		LightSensor ls = new LightSensor(SensorPort.S2);
 
 		do {
 			// clear the display
@@ -35,8 +35,10 @@ public class Lab4 {
 			USLocalizer usl = new USLocalizer(odo, navigator, us,
 					USLocalizer.LocalizationType.RISING_EDGE);
 			usl.doLocalization();
-			
-			
+
+			LightLocalizer lsl = new LightLocalizer(odo, ls);
+			lsl.doLocalization();
+
 		} else
 		// Falling edge
 		{
@@ -47,15 +49,15 @@ public class Lab4 {
 
 			USLocalizer usl = new USLocalizer(odo, navigator, us,
 					USLocalizer.LocalizationType.FALLING_EDGE);
-			usl.doLocalization();
-		
 			LightLocalizer lsl = new LightLocalizer(odo, ls);
+
+//			usl.doLocalization();
+//			patBot.setSpeeds(2.0, 0.0);
 			lsl.doLocalization();
 
 		}
 
 		// perform the light sensor localization
-
 
 		while (Button.waitForPress() != Button.ID_ESCAPE)
 			;
